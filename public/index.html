@@ -31,10 +31,24 @@
             padding: 40px;
         }
 
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
         h1 {
             color: #333;
             margin-bottom: 10px;
             font-size: 28px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
 
         .event-details {
@@ -198,7 +212,7 @@
             border-left: 4px solid #ffc107;
         }
 
-        button[type="submit"] {
+        .btn {
             width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -211,15 +225,24 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        button[type="submit"]:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        button[type="submit"]:disabled {
+        .btn:disabled {
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 10px 20px rgba(108, 117, 125, 0.3);
         }
 
         .error-message {
@@ -227,16 +250,6 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            border-left: 4px solid #28a745;
         }
 
         .menu-link {
@@ -248,180 +261,247 @@
         .menu-link:hover {
             text-decoration: underline;
         }
+
+        /* Landing Screen */
+        .landing-banner {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Confirmation Screen */
+        .order-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .order-summary h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item .label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .order-item .value {
+            color: #333;
+            text-align: right;
+            max-width: 60%;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Madhuban Lunch Order</h1>
-
-        <div class="event-details">
-            <p><strong>Where:</strong> Cowork Kitchen</p>
-            <p><strong>When:</strong> Friday, Feb 6 - 12-1pm</p>
-            <p><strong>What:</strong> Lunch from <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">Madhuban Indian Restaurant</a></p>
+        <!-- Landing Screen -->
+        <div class="screen active" id="landingScreen">
+            <img src="lunch-banner.png" alt="Input Cowork Lunch Break - Indian Food Feast from Madhuban" class="landing-banner">
+            <button class="btn" id="placeOrderBtn">Place Order</button>
         </div>
 
-        <div class="success-message" id="successMessage">
-            Your order has been submitted successfully!
+        <!-- Form Screen -->
+        <div class="screen" id="formScreen">
+            <h1>Madhuban Lunch Order</h1>
+
+            <div class="event-details">
+                <p><strong>Where:</strong> Cowork Kitchen</p>
+                <p><strong>When:</strong> Friday, Feb 6 - 12-1pm</p>
+                <p><strong>What:</strong> Lunch from <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">Madhuban Indian Restaurant</a></p>
+            </div>
+
+            <form id="lunchOrderForm">
+                <!-- Name -->
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <!-- Sharing vs Individual -->
+                <div class="form-group">
+                    <label>Are you down to go sharesies with the group or would you prefer to order for yourself? *</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="sharing" name="orderType" value="sharing" required>
+                            <label for="sharing">Yes, I want to go sharesies and I promise not to double dip</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="individual" name="orderType" value="individual" required>
+                            <label for="individual">No, I'd like to order for myself</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dietary Restrictions -->
+                <div class="form-group">
+                    <label for="dietary">Any dietary restrictions?</label>
+                    <input type="text" id="dietary" name="dietary" placeholder="e.g., vegetarian, nut allergy, cannibal, etc.">
+                </div>
+
+                <!-- Spice Level -->
+                <div class="form-group">
+                    <label for="spice">What level of spice do you prefer? *</label>
+                    <select id="spice" name="spice" required>
+                        <option value="">Select spice level...</option>
+                        <option value="none">None</option>
+                        <option value="mild">Mild</option>
+                        <option value="medium">Medium</option>
+                        <option value="spicy">Spicy</option>
+                        <option value="supah-dupah-spicy">Supah-dupah-spicy (I want to regret it afterwards)</option>
+                    </select>
+                    <div class="note">
+                        * For people sharing, we will probably err on the side of caution with spice. If you want to burn your tongue off, you should order individually and sit far away from us for the rest of the afternoon.
+                    </div>
+                </div>
+
+                <!-- Conditional: Sharing - Dish Votes -->
+                <div class="form-group conditional-section" id="sharingSection">
+                    <label>Vote for THREE dishes you would like to nominate for the communal pool *</label>
+                    <p style="font-size: 14px; color: #666; margin-bottom: 10px;">We will order 0.5-1 dish per person in the communal pool</p>
+                    <div class="dish-categories" id="dishCategories">
+                        <!-- Vegetarian -->
+                        <div class="dish-category">
+                            <div class="category-title">Vegetarian Dishes</div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Dal Makhani" id="dish1"><label for="dish1">Dal Makhani - $14.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chana Masala" id="dish2"><label for="dish2">Chana Masala - $14.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Vegetable Jalfrezi" id="dish3"><label for="dish3">Vegetable Jalfrezi - $14.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Aloo Gobi" id="dish4"><label for="dish4">Aloo Gobi - $15.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Navratan Korma" id="dish5"><label for="dish5">Navratan Korma - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Chili" id="dish6"><label for="dish6">Paneer Chili - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Butter Masala" id="dish7"><label for="dish7">Paneer Butter Masala - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Shahi Paneer" id="dish8"><label for="dish8">Shahi Paneer - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Paneer" id="dish9"><label for="dish9">Kadai Paneer - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Spinach" id="dish10"><label for="dish10">Paneer Spinach - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Pasanda" id="dish11"><label for="dish11">Paneer Pasanda - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Tikka Masala" id="dish12"><label for="dish12">Paneer Tikka Masala - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Soya Chaap" id="dish13"><label for="dish13">Butter Soya Chaap - $15.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Chettinad" id="dish14"><label for="dish14">Paneer Chettinad - $16.99</label></div>
+                        </div>
+
+                        <!-- Chicken -->
+                        <div class="dish-category">
+                            <div class="category-title">Chicken Dishes</div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Chicken" id="dish15"><label for="dish15">Butter Chicken - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Tandoori Butter Chicken" id="dish16"><label for="dish16">Tandoori Butter Chicken - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Tikka Masala" id="dish17"><label for="dish17">Chicken Tikka Masala - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Chicken" id="dish18"><label for="dish18">Chili Chicken - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Chicken" id="dish19"><label for="dish19">Kadai Chicken - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Mango Chicken Curry" id="dish20"><label for="dish20">Mango Chicken Curry - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Curry" id="dish21"><label for="dish21">Chicken Curry - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Vindaloo" id="dish22"><label for="dish22">Chicken Vindaloo - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Korma" id="dish23"><label for="dish23">Chicken Korma - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Lababdar" id="dish24"><label for="dish24">Chicken Lababdar - $17.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Rogan Josh" id="dish25"><label for="dish25">Rogan Josh - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Methi Malai" id="dish26"><label for="dish26">Chicken Methi Malai - $16.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Chettinad" id="dish27"><label for="dish27">Chicken Chettinad - $16.99</label></div>
+                        </div>
+
+                        <!-- Lamb/Goat -->
+                        <div class="dish-category">
+                            <div class="category-title">Lamb & Goat Dishes</div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Butter Masala" id="dish28"><label for="dish28">Lamb Butter Masala - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Butter Masala" id="dish29"><label for="dish29">Goat Butter Masala - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Kadai" id="dish30"><label for="dish30">Lamb Kadai - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Kadai" id="dish31"><label for="dish31">Goat Kadai - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Korma" id="dish32"><label for="dish32">Lamb Korma - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Korma" id="dish33"><label for="dish33">Goat Korma - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Curry" id="dish34"><label for="dish34">Lamb Curry - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Curry" id="dish35"><label for="dish35">Goat Curry - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Vindaloo" id="dish36"><label for="dish36">Lamb Vindaloo - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Vindaloo" id="dish37"><label for="dish37">Goat Vindaloo - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Coconut" id="dish38"><label for="dish38">Lamb Coconut - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Coconut" id="dish39"><label for="dish39">Goat Coconut - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Bhuna Gosht" id="dish40"><label for="dish40">Lamb Bhuna Gosht - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Bhuna Gosht" id="dish41"><label for="dish41">Goat Bhuna Gosht - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Lamb" id="dish42"><label for="dish42">Butter Lamb - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Goat" id="dish43"><label for="dish43">Butter Goat - $18.99</label></div>
+                        </div>
+
+                        <!-- Seafood -->
+                        <div class="dish-category">
+                            <div class="category-title">Seafood Dishes</div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Prawn" id="dish44"><label for="dish44">Chili Prawn - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Fish" id="dish45"><label for="dish45">Chili Fish - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Prawn" id="dish46"><label for="dish46">Kadai Prawn - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Fish" id="dish47"><label for="dish47">Kadai Fish - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Curry" id="dish48"><label for="dish48">Prawn Curry - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Curry" id="dish49"><label for="dish49">Fish Curry - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Vindaloo" id="dish50"><label for="dish50">Prawn Vindaloo - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Vindaloo" id="dish51"><label for="dish51">Fish Vindaloo - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Tikka Masala" id="dish52"><label for="dish52">Prawn Tikka Masala - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Tikka Masala" id="dish53"><label for="dish53">Fish Tikka Masala - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Mango Curry" id="dish54"><label for="dish54">Prawn Mango Curry - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Mango Curry" id="dish55"><label for="dish55">Fish Mango Curry - $17.49</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Goan Curry" id="dish56"><label for="dish56">Prawn Goan Curry - $18.99</label></div>
+                            <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Goan Curry" id="dish57"><label for="dish57">Fish Goan Curry - $17.49</label></div>
+                        </div>
+                    </div>
+                    <div class="selection-count" id="selectionCount">Selected: 0 / 3</div>
+                    <div class="error-message" id="dishError">Please select exactly 3 dishes</div>
+                </div>
+
+                <!-- Conditional: Individual - Lunch Special -->
+                <div class="form-group conditional-section" id="individualSection">
+                    <label for="lunchSpecial">Choose your lunch special (approx $15) *</label>
+                    <select id="lunchSpecial" name="lunchSpecial">
+                        <option value="">Select lunch special...</option>
+                        <option value="chicken">Chicken Lunch Special</option>
+                        <option value="lamb">Lamb Lunch Special</option>
+                        <option value="vegetarian">Vegetarian Lunch Special</option>
+                    </select>
+                    <div class="note">
+                        See the <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">full menu</a> for details on lunch specials.
+                    </div>
+                </div>
+
+                <!-- Any Sides -->
+                <div class="form-group">
+                    <label for="sides">Any sides?</label>
+                    <textarea id="sides" name="sides" rows="3" placeholder="e.g., drinks, appies, naan, etc."></textarea>
+                    <div class="note">
+                        Check the <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">full menu</a> for drinks, appetizers, and other options.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Submit Order</button>
+            </form>
         </div>
 
-        <form id="lunchOrderForm">
-            <!-- Name -->
-            <div class="form-group">
-                <label for="name">Name *</label>
-                <input type="text" id="name" name="name" required>
+        <!-- Confirmation Screen -->
+        <div class="screen" id="confirmationScreen">
+            <div class="order-summary">
+                <h3>Order Confirmed!</h3>
+                <div id="orderDetails"></div>
             </div>
-
-            <!-- Sharing vs Individual -->
-            <div class="form-group">
-                <label>Are you down to go sharesies with the group or would you prefer to order for yourself? *</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" id="sharing" name="orderType" value="sharing" required>
-                        <label for="sharing">Yes, I want to go sharesies and I promise not to double dip</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="individual" name="orderType" value="individual" required>
-                        <label for="individual">No, I'd like to order for myself</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dietary Restrictions -->
-            <div class="form-group">
-                <label for="dietary">Any dietary restrictions?</label>
-                <input type="text" id="dietary" name="dietary" placeholder="e.g., vegetarian, nut allergy, cannibal, etc.">
-            </div>
-
-            <!-- Spice Level -->
-            <div class="form-group">
-                <label for="spice">What level of spice do you prefer? *</label>
-                <select id="spice" name="spice" required>
-                    <option value="">Select spice level...</option>
-                    <option value="none">None</option>
-                    <option value="mild">Mild</option>
-                    <option value="medium">Medium</option>
-                    <option value="spicy">Spicy</option>
-                    <option value="supah-dupah-spicy">Supah-dupah-spicy (I want to regret it afterwards)</option>
-                </select>
-                <div class="note">
-                    * For people sharing, we will probably err on the side of caution with spice. If you want to burn your tongue off, you should order individually and sit far away from us for the rest of the afternoon.
-                </div>
-            </div>
-
-            <!-- Conditional: Sharing - Dish Votes -->
-            <div class="form-group conditional-section" id="sharingSection">
-                <label>Vote for THREE dishes you would like to nominate for the communal pool *</label>
-                <p style="font-size: 14px; color: #666; margin-bottom: 10px;">We will order 0.5-1 dish per person in the communal pool</p>
-                <div class="dish-categories" id="dishCategories">
-                    <!-- Vegetarian -->
-                    <div class="dish-category">
-                        <div class="category-title">Vegetarian Dishes</div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Dal Makhani" id="dish1"><label for="dish1">Dal Makhani - $14.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chana Masala" id="dish2"><label for="dish2">Chana Masala - $14.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Vegetable Jalfrezi" id="dish3"><label for="dish3">Vegetable Jalfrezi - $14.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Aloo Gobi" id="dish4"><label for="dish4">Aloo Gobi - $15.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Navratan Korma" id="dish5"><label for="dish5">Navratan Korma - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Chili" id="dish6"><label for="dish6">Paneer Chili - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Butter Masala" id="dish7"><label for="dish7">Paneer Butter Masala - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Shahi Paneer" id="dish8"><label for="dish8">Shahi Paneer - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Paneer" id="dish9"><label for="dish9">Kadai Paneer - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Spinach" id="dish10"><label for="dish10">Paneer Spinach - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Pasanda" id="dish11"><label for="dish11">Paneer Pasanda - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Tikka Masala" id="dish12"><label for="dish12">Paneer Tikka Masala - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Soya Chaap" id="dish13"><label for="dish13">Butter Soya Chaap - $15.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Paneer Chettinad" id="dish14"><label for="dish14">Paneer Chettinad - $16.99</label></div>
-                    </div>
-
-                    <!-- Chicken -->
-                    <div class="dish-category">
-                        <div class="category-title">Chicken Dishes</div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Chicken" id="dish15"><label for="dish15">Butter Chicken - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Tandoori Butter Chicken" id="dish16"><label for="dish16">Tandoori Butter Chicken - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Tikka Masala" id="dish17"><label for="dish17">Chicken Tikka Masala - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Chicken" id="dish18"><label for="dish18">Chili Chicken - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Chicken" id="dish19"><label for="dish19">Kadai Chicken - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Mango Chicken Curry" id="dish20"><label for="dish20">Mango Chicken Curry - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Curry" id="dish21"><label for="dish21">Chicken Curry - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Vindaloo" id="dish22"><label for="dish22">Chicken Vindaloo - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Korma" id="dish23"><label for="dish23">Chicken Korma - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Lababdar" id="dish24"><label for="dish24">Chicken Lababdar - $17.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Rogan Josh" id="dish25"><label for="dish25">Rogan Josh - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Methi Malai" id="dish26"><label for="dish26">Chicken Methi Malai - $16.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chicken Chettinad" id="dish27"><label for="dish27">Chicken Chettinad - $16.99</label></div>
-                    </div>
-
-                    <!-- Lamb/Goat -->
-                    <div class="dish-category">
-                        <div class="category-title">Lamb & Goat Dishes</div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Butter Masala" id="dish28"><label for="dish28">Lamb Butter Masala - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Butter Masala" id="dish29"><label for="dish29">Goat Butter Masala - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Kadai" id="dish30"><label for="dish30">Lamb Kadai - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Kadai" id="dish31"><label for="dish31">Goat Kadai - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Korma" id="dish32"><label for="dish32">Lamb Korma - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Korma" id="dish33"><label for="dish33">Goat Korma - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Curry" id="dish34"><label for="dish34">Lamb Curry - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Curry" id="dish35"><label for="dish35">Goat Curry - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Vindaloo" id="dish36"><label for="dish36">Lamb Vindaloo - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Vindaloo" id="dish37"><label for="dish37">Goat Vindaloo - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Coconut" id="dish38"><label for="dish38">Lamb Coconut - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Coconut" id="dish39"><label for="dish39">Goat Coconut - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Lamb Bhuna Gosht" id="dish40"><label for="dish40">Lamb Bhuna Gosht - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Goat Bhuna Gosht" id="dish41"><label for="dish41">Goat Bhuna Gosht - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Lamb" id="dish42"><label for="dish42">Butter Lamb - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Butter Goat" id="dish43"><label for="dish43">Butter Goat - $18.99</label></div>
-                    </div>
-
-                    <!-- Seafood -->
-                    <div class="dish-category">
-                        <div class="category-title">Seafood Dishes</div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Prawn" id="dish44"><label for="dish44">Chili Prawn - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Chili Fish" id="dish45"><label for="dish45">Chili Fish - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Prawn" id="dish46"><label for="dish46">Kadai Prawn - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Kadai Fish" id="dish47"><label for="dish47">Kadai Fish - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Curry" id="dish48"><label for="dish48">Prawn Curry - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Curry" id="dish49"><label for="dish49">Fish Curry - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Vindaloo" id="dish50"><label for="dish50">Prawn Vindaloo - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Vindaloo" id="dish51"><label for="dish51">Fish Vindaloo - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Tikka Masala" id="dish52"><label for="dish52">Prawn Tikka Masala - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Tikka Masala" id="dish53"><label for="dish53">Fish Tikka Masala - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Mango Curry" id="dish54"><label for="dish54">Prawn Mango Curry - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Mango Curry" id="dish55"><label for="dish55">Fish Mango Curry - $17.49</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Prawn Goan Curry" id="dish56"><label for="dish56">Prawn Goan Curry - $18.99</label></div>
-                        <div class="dish-option"><input type="checkbox" name="dishes" value="Fish Goan Curry" id="dish57"><label for="dish57">Fish Goan Curry - $17.49</label></div>
-                    </div>
-                </div>
-                <div class="selection-count" id="selectionCount">Selected: 0 / 3</div>
-                <div class="error-message" id="dishError">Please select exactly 3 dishes</div>
-            </div>
-
-            <!-- Conditional: Individual - Lunch Special -->
-            <div class="form-group conditional-section" id="individualSection">
-                <label for="lunchSpecial">Choose your lunch special (approx $15) *</label>
-                <select id="lunchSpecial" name="lunchSpecial">
-                    <option value="">Select lunch special...</option>
-                    <option value="chicken">Chicken Lunch Special</option>
-                    <option value="lamb">Lamb Lunch Special</option>
-                    <option value="vegetarian">Vegetarian Lunch Special</option>
-                </select>
-                <div class="note">
-                    See the <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">full menu</a> for details on lunch specials.
-                </div>
-            </div>
-
-            <!-- Any Sides -->
-            <div class="form-group">
-                <label for="sides">Any sides?</label>
-                <textarea id="sides" name="sides" rows="3" placeholder="e.g., drinks, appies, naan, etc."></textarea>
-                <div class="note">
-                    Check the <a href="https://madhubanindianrestaurant.com/menu/" target="_blank" class="menu-link">full menu</a> for drinks, appetizers, and other options.
-                </div>
-            </div>
-
-            <button type="submit" id="submitBtn">Submit Order</button>
-        </form>
+            <p style="text-align: center; color: #555; margin-bottom: 20px;">See you Friday at noon!</p>
+            <button class="btn btn-secondary" id="newOrderBtn">Submit Another Order</button>
+        </div>
     </div>
 
     <script>
+        // Screen elements
+        const landingScreen = document.getElementById('landingScreen');
+        const formScreen = document.getElementById('formScreen');
+        const confirmationScreen = document.getElementById('confirmationScreen');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const newOrderBtn = document.getElementById('newOrderBtn');
+        const orderDetails = document.getElementById('orderDetails');
+
+        // Form elements
         const form = document.getElementById('lunchOrderForm');
         const sharingRadio = document.getElementById('sharing');
         const individualRadio = document.getElementById('individual');
@@ -431,8 +511,27 @@
         const selectionCount = document.getElementById('selectionCount');
         const dishError = document.getElementById('dishError');
         const lunchSpecial = document.getElementById('lunchSpecial');
-        const successMessage = document.getElementById('successMessage');
         const submitBtn = document.getElementById('submitBtn');
+
+        // Screen navigation
+        function showScreen(screen) {
+            landingScreen.classList.remove('active');
+            formScreen.classList.remove('active');
+            confirmationScreen.classList.remove('active');
+            screen.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        placeOrderBtn.addEventListener('click', () => showScreen(formScreen));
+        newOrderBtn.addEventListener('click', () => {
+            form.reset();
+            sharingSection.style.display = 'none';
+            individualSection.style.display = 'none';
+            selectionCount.textContent = 'Selected: 0 / 3';
+            selectionCount.classList.remove('max');
+            dishCheckboxes.forEach(cb => cb.disabled = false);
+            showScreen(formScreen);
+        });
 
         // Toggle sections based on order type
         function updateSections() {
@@ -477,6 +576,55 @@
         dishCheckboxes.forEach(cb => {
             cb.addEventListener('change', updateDishSelection);
         });
+
+        // Display order confirmation
+        function displayOrderConfirmation(formData) {
+            const orderTypeDisplay = formData.orderType === 'sharing' ? 'Sharing with group' : 'Individual order';
+
+            let detailsHTML = `
+                <div class="order-item">
+                    <span class="label">Name</span>
+                    <span class="value">${formData.name}</span>
+                </div>
+                <div class="order-item">
+                    <span class="label">Order Type</span>
+                    <span class="value">${orderTypeDisplay}</span>
+                </div>
+                <div class="order-item">
+                    <span class="label">Dietary Restrictions</span>
+                    <span class="value">${formData.dietary}</span>
+                </div>
+                <div class="order-item">
+                    <span class="label">Spice Level</span>
+                    <span class="value">${formData.spice}</span>
+                </div>
+            `;
+
+            if (formData.orderType === 'sharing') {
+                detailsHTML += `
+                    <div class="order-item">
+                        <span class="label">Dish Votes</span>
+                        <span class="value">${formData.dishVotes}</span>
+                    </div>
+                `;
+            } else {
+                detailsHTML += `
+                    <div class="order-item">
+                        <span class="label">Lunch Special</span>
+                        <span class="value">${formData.lunchSpecial}</span>
+                    </div>
+                `;
+            }
+
+            detailsHTML += `
+                <div class="order-item">
+                    <span class="label">Sides</span>
+                    <span class="value">${formData.sides}</span>
+                </div>
+            `;
+
+            orderDetails.innerHTML = detailsHTML;
+        }
 
         // Form submission
         form.addEventListener('submit', async (e) => {
@@ -528,23 +676,20 @@
                     body: JSON.stringify(formData)
                 });
 
-                // With no-cors we can't check the response, so assume success
-                successMessage.style.display = 'block';
+                // Show confirmation screen with order details
+                displayOrderConfirmation(formData);
+                showScreen(confirmationScreen);
+
+                // Reset form for next use
                 form.reset();
                 sharingSection.style.display = 'none';
                 individualSection.style.display = 'none';
                 selectionCount.textContent = 'Selected: 0 / 3';
                 selectionCount.classList.remove('max');
                 dishCheckboxes.forEach(cb => cb.disabled = false);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Order';
 
-                // Scroll to success message
-                successMessage.scrollIntoView({ behavior: 'smooth' });
-
-                // Reset button after 2 seconds
-                setTimeout(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Order';
-                }, 2000);
             } catch (error) {
                 console.error('Error:', error);
                 alert('There was an error submitting your order. Please try again or contact Jakob.');
